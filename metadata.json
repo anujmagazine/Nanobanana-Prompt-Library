@@ -1,0 +1,5 @@
+{
+  "name": "NanoBanana Prompt Vault",
+  "description": "A smart prompt library to store, organize, and analyze your AI prompts using Gemini.",
+  "requestFramePermissions": []
+}

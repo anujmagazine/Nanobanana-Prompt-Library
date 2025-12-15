@@ -1,0 +1,32 @@
+import React from 'react';
+import { 
+  Plus, 
+  Search, 
+  Save, 
+  Trash2, 
+  Sparkles, 
+  X, 
+  Edit2, 
+  Copy,
+  LayoutGrid,
+  List as ListIcon,
+  Tag,
+  Link as LinkIcon,
+  ExternalLink
+} from 'lucide-react';
+
+export const Icons = {
+  Plus,
+  Search,
+  Save,
+  Trash2,
+  Sparkles,
+  X,
+  Edit2,
+  Copy,
+  LayoutGrid,
+  List: ListIcon,
+  Tag,
+  Link: LinkIcon,
+  ExternalLink
+};
