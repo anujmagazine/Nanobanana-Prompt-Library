@@ -4,6 +4,7 @@ export interface PromptData {
   content: string;
   breakdown: string;
   tags: string[];
+  useCases?: string[];
   sourceLink?: string;
   createdAt: number;
   updatedAt: number;
@@ -13,4 +14,5 @@ export interface AnalysisResult {
   title: string;
   breakdown: string;
   tags: string[];
+  useCases: string[];
 }

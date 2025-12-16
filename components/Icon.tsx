@@ -12,7 +12,14 @@ import {
   List as ListIcon,
   Tag,
   Link as LinkIcon,
-  ExternalLink
+  ExternalLink,
+  RefreshCw,
+  Settings,
+  Download,
+  Upload,
+  RotateCcw,
+  FileJson,
+  Target
 } from 'lucide-react';
 
 export const Icons = {
@@ -28,5 +35,12 @@ export const Icons = {
   List: ListIcon,
   Tag,
   Link: LinkIcon,
-  ExternalLink
+  ExternalLink,
+  RefreshCw,
+  Settings,
+  Download,
+  Upload,
+  RotateCcw,
+  FileJson,
+  Target
 };

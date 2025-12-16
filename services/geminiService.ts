@@ -8,7 +8,12 @@ export const analyzePromptContent = async (content: string): Promise<AnalysisRes
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
-      contents: `Analyze the following AI prompt. I need a short, descriptive title, a detailed breakdown explaining what the prompt does and its structure, and a list of relevant tags (max 5).
+      contents: `Analyze the following AI prompt. 
+      
+      1. Title: A short, simple, plain English title describing the outcome (max 8 words). No jargon.
+      2. Breakdown: A detailed explanation of the prompt's logic and structure.
+      3. Tags: Up to 5 relevant keywords.
+      4. Use Cases: Identify 3 distinct professional scenarios or job roles where this prompt solves a specific problem. Make it relatable to users.
       
       Prompt to analyze:
       """
@@ -19,15 +24,20 @@ export const analyzePromptContent = async (content: string): Promise<AnalysisRes
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            title: { type: Type.STRING, description: "A short, catchy title for the prompt (max 10 words)" },
-            breakdown: { type: Type.STRING, description: "A detailed explanation of the prompt's logic, structure, and intent." },
+            title: { type: Type.STRING, description: "Simple, outcome-focused title." },
+            breakdown: { type: Type.STRING, description: "Detailed logic explanation." },
             tags: { 
               type: Type.ARRAY, 
               items: { type: Type.STRING },
-              description: "Up to 5 keywords describing the prompt" 
+              description: "5 keywords" 
+            },
+            useCases: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING },
+              description: "3 specific professional use cases (e.g., 'Marketing Managers can use this to...')"
             }
           },
-          required: ["title", "breakdown", "tags"]
+          required: ["title", "breakdown", "tags", "useCases"]
         }
       }
     });

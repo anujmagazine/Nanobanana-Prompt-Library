@@ -18,6 +18,9 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   
+  const [useCases, setUseCases] = useState<string[]>([]);
+  const [useCaseInput, setUseCaseInput] = useState('');
+  
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
@@ -27,6 +30,7 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
       setBreakdown(initialData.breakdown);
       setSourceLink(initialData.sourceLink || '');
       setTags(initialData.tags || []);
+      setUseCases(initialData.useCases || []);
     } else {
       // Reset form for new entry
       setTitle('');
@@ -34,6 +38,7 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
       setBreakdown('');
       setSourceLink('');
       setTags([]);
+      setUseCases([]);
     }
   }, [initialData, isOpen]);
 
@@ -46,6 +51,7 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
       setTitle(result.title);
       setBreakdown(result.breakdown);
       setTags(result.tags);
+      setUseCases(result.useCases);
     } catch (error) {
       alert("Failed to analyze prompt. Please ensure your API key is set.");
     } finally {
@@ -66,6 +72,7 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
       breakdown,
       sourceLink: sourceLink.trim(),
       tags,
+      useCases,
       createdAt: initialData?.createdAt || Date.now(),
       updatedAt: Date.now(),
     };
@@ -82,6 +89,17 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
 
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter(t => t !== tagToRemove));
+  };
+
+  const addUseCase = () => {
+    if (useCaseInput.trim()) {
+      setUseCases([...useCases, useCaseInput.trim()]);
+      setUseCaseInput('');
+    }
+  };
+
+  const removeUseCase = (index: number) => {
+    setUseCases(useCases.filter((_, i) => i !== index));
   };
 
   if (!isOpen) return null;
@@ -170,11 +188,52 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700">Breakdown & Explanation</label>
             <textarea
-              className="w-full h-32 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-banana-400 focus:border-banana-400 outline-none resize-none text-sm leading-relaxed"
+              className="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-banana-400 focus:border-banana-400 outline-none resize-none text-sm leading-relaxed"
               placeholder="Explain how this prompt works or let AI generate it for you..."
               value={breakdown}
               onChange={(e) => setBreakdown(e.target.value)}
             />
+          </div>
+
+          {/* Use Cases */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700 flex items-center gap-2">
+              <Icons.Target size={16} className="text-banana-600" />
+              Professional Use Cases
+            </label>
+            <div className="space-y-2 mb-2">
+              {useCases.map((useCase, index) => (
+                <div key={index} className="flex items-start gap-2 group">
+                   <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-banana-400 shrink-0" />
+                   <p className="flex-1 text-sm text-gray-700">{useCase}</p>
+                   <button 
+                    onClick={() => removeUseCase(index)}
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded transition-all"
+                   >
+                     <Icons.X size={14} />
+                   </button>
+                </div>
+              ))}
+              {useCases.length === 0 && (
+                <p className="text-sm text-gray-400 italic">No use cases added yet. Analyze prompt to generate them.</p>
+              )}
+            </div>
+            <div className="flex space-x-2">
+              <input
+                type="text"
+                className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-banana-400 outline-none text-sm"
+                placeholder="Add a specific use case (e.g. 'Marketing teams can use this for...')"
+                value={useCaseInput}
+                onChange={(e) => setUseCaseInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && addUseCase()}
+              />
+              <button 
+                onClick={addUseCase}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+              >
+                Add
+              </button>
+            </div>
           </div>
 
           {/* Tags */}
