@@ -110,12 +110,12 @@ const App: React.FC = () => {
     reader.onload = (event) => {
       try {
         const json = event.target?.result as string;
-        const newPrompts = importData(json);
+        const { prompts: newPrompts, stats } = importData(json);
         setPrompts(newPrompts);
         setIsSettingsOpen(false);
-        alert(`Successfully imported ${newPrompts.length} prompts.`);
+        alert(`Import Successful!\n\n• ${stats.added} prompts added\n• ${stats.updated} prompts updated\n\nYour library now has ${newPrompts.length} prompts.`);
       } catch (err) {
-        alert("Failed to import file. It may be invalid JSON.");
+        alert("Failed to import file. It may be invalid JSON or empty.");
       }
     };
     reader.readAsText(file);
@@ -443,7 +443,16 @@ const App: React.FC = () => {
                               {prompt.useCases.map((useCase, idx) => (
                                 <li key={idx} className="flex items-start gap-2 bg-white p-2 rounded-lg border border-gray-200 text-sm text-gray-700">
                                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-banana-400 shrink-0" />
-                                   <span>{useCase}</span>
+                                   <span>
+                                     {useCase.includes(':') ? (
+                                        <>
+                                          <span className="font-semibold text-gray-900">{useCase.split(':')[0]}:</span>
+                                          {useCase.substring(useCase.indexOf(':') + 1)}
+                                        </>
+                                     ) : (
+                                        useCase
+                                     )}
+                                   </span>
                                 </li>
                               ))}
                             </ul>
@@ -473,9 +482,19 @@ const App: React.FC = () => {
              </div>
              
              <div className="p-6 space-y-4">
-                <p className="text-sm text-gray-600">
-                  Manage your prompt library data. Export your data regularly to keep it safe.
-                </p>
+                <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-4">
+                  <h3 className="text-sm font-bold text-blue-900 flex items-center gap-2 mb-1">
+                    <Icons.Save size={16} />
+                    Storage Status
+                  </h3>
+                  <p className="text-xs text-blue-800 leading-relaxed">
+                    Your prompts are saved to your <strong>Browser's Local Storage</strong>. 
+                    They are not synced to the cloud. 
+                    <br/><br/>
+                    <strong>Important:</strong> If you clear your browser cache or use Incognito/Private mode, your data may be deleted. 
+                    Please use the <strong>Export</strong> button below regularly to save a backup to your computer.
+                  </p>
+                </div>
 
                 <div className="grid grid-cols-1 gap-3">
                   <button 

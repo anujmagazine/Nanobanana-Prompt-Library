@@ -9,8 +9,6 @@ export const getPrompts = (): PromptData[] => {
     return data ? JSON.parse(data) : [];
   } catch (e) {
     console.error("Failed to load prompts", e);
-    // Try to return backup if main fails? 
-    // For now, return empty to avoid cascading errors, but log clearly.
     return [];
   }
 };
@@ -77,18 +75,54 @@ export const exportData = (): string => {
   return JSON.stringify(data, null, 2);
 };
 
-export const importData = (jsonString: string): PromptData[] => {
+export const importData = (jsonString: string): { prompts: PromptData[], stats: { added: number, updated: number } } => {
   try {
     const parsed = JSON.parse(jsonString);
     if (!Array.isArray(parsed)) throw new Error("Invalid format: not an array");
     
     // Basic validation
-    const valid = parsed.filter(p => p.id && p.content);
-    if (valid.length === 0 && parsed.length > 0) throw new Error("No valid prompts found");
+    const validRaw = parsed.filter(p => p.id && p.content);
+    if (validRaw.length === 0 && parsed.length > 0) throw new Error("No valid prompts found in file");
 
-    createBackup(); // Backup existing before import
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(valid));
-    return valid;
+    createBackup(); // Backup existing before merge
+
+    const currentPrompts = getPrompts();
+    const promptMap = new Map(currentPrompts.map(p => [p.id, p]));
+    
+    let added = 0;
+    let updated = 0;
+
+    validRaw.forEach((p: any) => {
+        // Ensure the imported object matches our PromptData structure basics
+        const safePrompt: PromptData = {
+            id: p.id,
+            title: p.title || 'Untitled Prompt',
+            content: p.content,
+            breakdown: p.breakdown || '',
+            tags: Array.isArray(p.tags) ? p.tags : [],
+            useCases: Array.isArray(p.useCases) ? p.useCases : [],
+            sourceLink: p.sourceLink,
+            createdAt: p.createdAt || Date.now(),
+            updatedAt: p.updatedAt || Date.now()
+        };
+
+        if (promptMap.has(safePrompt.id)) {
+            updated++;
+            // We overwrite with the imported version as "Import" usually implies "Restore/Update"
+            promptMap.set(safePrompt.id, safePrompt);
+        } else {
+            added++;
+            promptMap.set(safePrompt.id, safePrompt);
+        }
+    });
+
+    const merged = Array.from(promptMap.values());
+    // Sort by updated time descending
+    merged.sort((a, b) => b.updatedAt - a.updatedAt);
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+    
+    return { prompts: merged, stats: { added, updated } };
   } catch (e) {
     console.error("Import failed", e);
     throw e;

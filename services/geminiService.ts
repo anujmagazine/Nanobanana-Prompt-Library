@@ -13,7 +13,8 @@ export const analyzePromptContent = async (content: string): Promise<AnalysisRes
       1. Title: A short, simple, plain English title describing the outcome (max 8 words). No jargon.
       2. Breakdown: A detailed explanation of the prompt's logic and structure.
       3. Tags: Up to 5 relevant keywords.
-      4. Use Cases: Identify 3 distinct professional scenarios or job roles where this prompt solves a specific problem. Make it relatable to users.
+      4. Use Cases: Identify 3 distinct professional scenarios. Format clearly as "Professional Role: Specific Action/Benefit". 
+         Example: "Content Marketer: Generates 5 variations of ad copy instantly."
       
       Prompt to analyze:
       """
@@ -34,7 +35,7 @@ export const analyzePromptContent = async (content: string): Promise<AnalysisRes
             useCases: {
               type: Type.ARRAY,
               items: { type: Type.STRING },
-              description: "3 specific professional use cases (e.g., 'Marketing Managers can use this to...')"
+              description: "3 specific professional use cases in format 'Role: Action'"
             }
           },
           required: ["title", "breakdown", "tags", "useCases"]

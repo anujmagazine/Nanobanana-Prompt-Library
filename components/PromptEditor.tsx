@@ -222,7 +222,7 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
               <input
                 type="text"
                 className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-banana-400 outline-none text-sm"
-                placeholder="Add a specific use case (e.g. 'Marketing teams can use this for...')"
+                placeholder="e.g. 'Marketing Manager: Create ad copy for campaigns'"
                 value={useCaseInput}
                 onChange={(e) => setUseCaseInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && addUseCase()}
