@@ -5,7 +5,8 @@ import {
   savePrompt, 
   savePrompts, 
   deletePrompt, 
-  exportData, 
+  exportData,
+  exportAsCsv,
   importData, 
   restoreFromBackup, 
   hasBackup 
@@ -85,13 +86,26 @@ const App: React.FC = () => {
   };
 
   // Data Management Handlers
-  const handleExport = () => {
+  const handleExportJson = () => {
     const dataStr = exportData();
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = `nanobanana_backup_${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleExportCsv = () => {
+    const csvStr = exportAsCsv();
+    const blob = new Blob([csvStr], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nanobanana_excel_${new Date().toISOString().slice(0,10)}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -498,11 +512,23 @@ const App: React.FC = () => {
 
                 <div className="grid grid-cols-1 gap-3">
                   <button 
-                    onClick={handleExport}
+                    onClick={handleExportCsv}
+                    className="flex items-center justify-center gap-2 w-full p-4 bg-green-50 border border-green-200 rounded-xl hover:bg-green-100 transition-colors text-green-800 font-medium"
+                  >
+                    <Icons.FileSpreadsheet size={18} />
+                    Export to Excel (CSV)
+                  </button>
+
+                  <div className="border-t border-gray-100 my-2"></div>
+
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Backup & Restore</p>
+                  
+                  <button 
+                    onClick={handleExportJson}
                     className="flex items-center justify-center gap-2 w-full p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-slate-700 font-medium"
                   >
                     <Icons.Download size={18} />
-                    Export Library (JSON)
+                    Backup Library (JSON)
                   </button>
 
                   <button 
@@ -510,7 +536,7 @@ const App: React.FC = () => {
                     className="flex items-center justify-center gap-2 w-full p-4 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors text-slate-700 font-medium"
                   >
                     <Icons.Upload size={18} />
-                    Import Library (JSON)
+                    Import / Restore (JSON)
                   </button>
                   <input 
                     type="file" 

@@ -75,6 +75,34 @@ export const exportData = (): string => {
   return JSON.stringify(data, null, 2);
 };
 
+export const exportAsCsv = (): string => {
+  const prompts = getPrompts();
+  const headers = ["Title", "Prompt Content", "Breakdown", "Tags", "Use Cases", "Source Link", "Created Date"];
+  
+  // Helper to escape CSV fields (handling quotes and newlines)
+  const escape = (text: string | undefined | null) => {
+    if (!text) return '""';
+    const str = String(text);
+    // Double quotes are used to escape quotes in CSV
+    return `"${str.replace(/"/g, '""')}"`;
+  };
+
+  const rows = prompts.map(p => {
+    return [
+      escape(p.title),
+      escape(p.content),
+      escape(p.breakdown),
+      escape(p.tags.join(', ')),
+      escape(p.useCases?.join('\n') || ''), // Use newlines within the cell for use cases
+      escape(p.sourceLink),
+      escape(new Date(p.createdAt).toLocaleDateString())
+    ].join(',');
+  });
+
+  // Add BOM (\ufeff) so Excel correctly recognizes UTF-8 characters (emojis, etc)
+  return '\ufeff' + [headers.join(','), ...rows].join('\n');
+};
+
 export const importData = (jsonString: string): { prompts: PromptData[], stats: { added: number, updated: number } } => {
   try {
     const parsed = JSON.parse(jsonString);

@@ -186,10 +186,10 @@ export const PromptEditor: React.FC<PromptEditorProps> = ({ initialData, isOpen,
 
           {/* Breakdown/Description */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700">Breakdown & Explanation</label>
+            <label className="block text-sm font-semibold text-gray-700">Breakdown (Design Logic)</label>
             <textarea
-              className="w-full h-24 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-banana-400 focus:border-banana-400 outline-none resize-none text-sm leading-relaxed"
-              placeholder="Explain how this prompt works or let AI generate it for you..."
+              className="w-full h-32 p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-banana-400 focus:border-banana-400 outline-none resize-none text-sm leading-relaxed"
+              placeholder="List simple points explaining how the prompt works (e.g. • Defines the persona...)"
               value={breakdown}
               onChange={(e) => setBreakdown(e.target.value)}
             />

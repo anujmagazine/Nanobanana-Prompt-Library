@@ -11,7 +11,7 @@ export const analyzePromptContent = async (content: string): Promise<AnalysisRes
       contents: `Analyze the following AI prompt. 
       
       1. Title: A short, simple, plain English title describing the outcome (max 8 words). No jargon.
-      2. Breakdown: A detailed explanation of the prompt's logic and structure.
+      2. Breakdown: Explain the design and logic of this prompt in simple language. Use a bulleted list (•) with 3-4 points. Avoid complex technical terms.
       3. Tags: Up to 5 relevant keywords.
       4. Use Cases: Identify 3 distinct professional scenarios. Format clearly as "Professional Role: Specific Action/Benefit". 
          Example: "Content Marketer: Generates 5 variations of ad copy instantly."
@@ -26,7 +26,7 @@ export const analyzePromptContent = async (content: string): Promise<AnalysisRes
           type: Type.OBJECT,
           properties: {
             title: { type: Type.STRING, description: "Simple, outcome-focused title." },
-            breakdown: { type: Type.STRING, description: "Detailed logic explanation." },
+            breakdown: { type: Type.STRING, description: "Simple bulleted list explaining the logic." },
             tags: { 
               type: Type.ARRAY, 
               items: { type: Type.STRING },

@@ -19,7 +19,8 @@ import {
   Upload,
   RotateCcw,
   FileJson,
-  Target
+  Target,
+  FileSpreadsheet
 } from 'lucide-react';
 
 export const Icons = {
@@ -42,5 +43,6 @@ export const Icons = {
   Upload,
   RotateCcw,
   FileJson,
-  Target
+  Target,
+  FileSpreadsheet
 };
